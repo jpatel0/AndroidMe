@@ -16,8 +16,8 @@
 
 package com.example.android.android_me.ui;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -27,36 +27,49 @@ import com.example.android.android_me.data.AndroidImageAssets;
 // This activity will display a custom Android image composed of three body parts: head, body, and legs
 public class AndroidMeActivity extends AppCompatActivity {
 
+    private int headIndex;
+    private int bodyIndex;
+    private int legIndex;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_android_me);
 
-        BodyFragment headFragment=new BodyFragment();
+        Intent intent=getIntent();
+        Bundle bundle=intent.getExtras();
 
-        headFragment.setmImageIds(AndroidImageAssets.getHeads());
-        headFragment.setListIndex(3);
+        headIndex=bundle.getInt("headIndex");
+        bodyIndex=bundle.getInt("bodyIndex");
+        legIndex=bundle.getInt("legIndex");
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .add(R.id.head_frag,headFragment)
-                .commit();
 
-        BodyFragment bodyFragment=new BodyFragment();
+        if (savedInstanceState==null) {
+            BodyFragment headFragment = new BodyFragment();
 
-        bodyFragment.setmImageIds(AndroidImageAssets.getBodies());
-        bodyFragment.setListIndex(3);
+            headFragment.setmImageIds(AndroidImageAssets.getHeads());
+            headFragment.setListIndex(headIndex);
 
-        BodyFragment legFragment=new BodyFragment();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .add(R.id.head_frag, headFragment)
+                    .commit();
 
-        legFragment.setmImageIds(AndroidImageAssets.getLegs());
-        legFragment.setListIndex(3);
+            BodyFragment bodyFragment = new BodyFragment();
 
-        fragmentManager.beginTransaction()
-                .add(R.id.body_frag,bodyFragment).commit();
+            bodyFragment.setmImageIds(AndroidImageAssets.getBodies());
+            bodyFragment.setListIndex(bodyIndex);
 
-        fragmentManager.beginTransaction().add(R.id.leg_frag,legFragment).commit();
+            BodyFragment legFragment = new BodyFragment();
 
+            legFragment.setmImageIds(AndroidImageAssets.getLegs());
+            legFragment.setListIndex(legIndex);
+
+            fragmentManager.beginTransaction()
+                    .add(R.id.body_frag, bodyFragment).commit();
+
+            fragmentManager.beginTransaction().add(R.id.leg_frag, legFragment).commit();
+        }
 
     }
 
